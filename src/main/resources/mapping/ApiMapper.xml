@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yskj.dao.ApiMapper">
+    <resultMap id="BaseResultMap" type="com.yskj.domain.Api">
+        <id column="apiid" jdbcType="INTEGER" property="apiid"/>
+        <result column="apifunctionpoint" jdbcType="VARCHAR" property="apifunctionpoint"/>
+        <result column="apiurl" jdbcType="VARCHAR" property="apiurl"/>
+        <result column="apiparam" jdbcType="VARCHAR" property="apiparam"/>
+        <result column="apiexpect" jdbcType="VARCHAR" property="apiexpect"/>
+        <result column="apiactual" jdbcType="VARCHAR" property="apiactual"/>
+        <result column="apiresponse" jdbcType="VARCHAR" property="apiresponse"/>
+        <result column="planrun" jdbcType="VARCHAR" property="planrun"/>
+        <result column="apirunresult" jdbcType="VARCHAR" property="apirunresult"/>
+        <result column="apicreatetime" jdbcType="TIMESTAMP" property="apicreatetime"/>
+        <result column="productid" jdbcType="INTEGER" property="productid"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        apiid, apifunctionpoint, apiurl, apiparam, apiexpect, apiactual, apiresponse, planrun,
+        apirunresult, apicreatetime, productid
+    </sql>
+
+    <select id="listByAll" resultMap="BaseResultMap">
+        select * from api
+    </select>
+
+
+    <select id="queryUserInfo" resultMap="BaseResultMap">
+        select * from api where 1=1
+        <if test="_parameter !=null and  _parameter != '' or _parameter != 0">
+            and productid like CONCAT('%',#{_parameter,jdbcType=INTEGER},'%')
+        </if>
+    </select>
+
+
+
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from api
+        where apiid = #{apiid,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from api
+        where apiid = #{apiid,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.yskj.domain.Api">
+        insert into api (apifunctionpoint, apiurl,
+        apiparam, apiexpect, apiactual,
+        apiresponse, planrun,
+        apicreatetime, productid)
+        values (#{apifunctionpoint,jdbcType=VARCHAR}, #{apiurl,jdbcType=VARCHAR},
+        #{apiparam,jdbcType=VARCHAR}, #{apiexpect,jdbcType=VARCHAR}, #{apiactual,jdbcType=VARCHAR},
+        #{apiresponse,jdbcType=VARCHAR}, #{planrun,jdbcType=VARCHAR},
+        #{apicreatetime,jdbcType=TIMESTAMP}, #{productid,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="com.yskj.domain.Api">
+        insert into api
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="apifunctionpoint != null">
+                apifunctionpoint,
+            </if>
+            <if test="apiurl != null">
+                apiurl,
+            </if>
+            <if test="apiparam != null">
+                apiparam,
+            </if>
+            <if test="apiexpect != null">
+                apiexpect,
+            </if>
+            <if test="apiactual != null">
+                apiactual,
+            </if>
+            <if test="apiresponse != null">
+                apiresponse,
+            </if>
+            <if test="planrun != null">
+                planrun,
+            </if>
+            <if test="apirunresult != null">
+                apirunresult,
+            </if>
+            <if test="apicreatetime != null">
+                apicreatetime,
+            </if>
+            <if test="productid != null">
+                productid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="apifunctionpoint != null">
+                #{apifunctionpoint,jdbcType=VARCHAR},
+            </if>
+            <if test="apiurl != null">
+                #{apiurl,jdbcType=VARCHAR},
+            </if>
+            <if test="apiparam != null">
+                #{apiparam,jdbcType=VARCHAR},
+            </if>
+            <if test="apiexpect != null">
+                #{apiexpect,jdbcType=VARCHAR},
+            </if>
+            <if test="apiactual != null">
+                #{apiactual,jdbcType=VARCHAR},
+            </if>
+            <if test="apiresponse != null">
+                #{apiresponse,jdbcType=VARCHAR},
+            </if>
+            <if test="planrun != null">
+                #{planrun,jdbcType=VARCHAR},
+            </if>
+            <if test="apirunresult != null">
+                #{apirunresult,jdbcType=VARCHAR},
+            </if>
+            <if test="apicreatetime != null">
+                #{apicreatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="productid != null">
+                #{productid,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yskj.domain.Api">
+        update api
+        <set>
+            <if test="apifunctionpoint != null">
+                apifunctionpoint = #{apifunctionpoint,jdbcType=VARCHAR},
+            </if>
+            <if test="apiurl != null">
+                apiurl = #{apiurl,jdbcType=VARCHAR},
+            </if>
+            <if test="apiparam != null">
+                apiparam = #{apiparam,jdbcType=VARCHAR},
+            </if>
+            <if test="apiexpect != null">
+                apiexpect = #{apiexpect,jdbcType=VARCHAR},
+            </if>
+            <if test="apiactual != null">
+                apiactual = #{apiactual,jdbcType=VARCHAR},
+            </if>
+            <if test="apiresponse != null">
+                apiresponse = #{apiresponse,jdbcType=VARCHAR},
+            </if>
+            <if test="planrun != null">
+                planrun = #{planrun,jdbcType=VARCHAR},
+            </if>
+            <if test="apirunresult != null">
+                apirunresult = #{apirunresult,jdbcType=VARCHAR},
+            </if>
+            <if test="apicreatetime != null">
+                apicreatetime = #{apicreatetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="productid != null">
+                productid = #{productid,jdbcType=INTEGER},
+            </if>
+        </set>
+        where apiid = #{apiid,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yskj.domain.Api">
+        update api
+        set apifunctionpoint = #{apifunctionpoint,jdbcType=VARCHAR},
+        apiurl = #{apiurl,jdbcType=VARCHAR},
+        apiparam = #{apiparam,jdbcType=VARCHAR},
+        apiexpect = #{apiexpect,jdbcType=VARCHAR},
+        apiactual = #{apiactual,jdbcType=VARCHAR},
+        apiresponse = #{apiresponse,jdbcType=VARCHAR},
+        planrun = #{planrun,jdbcType=VARCHAR},
+        apirunresult = #{apirunresult,jdbcType=VARCHAR},
+        apicreatetime = #{apicreatetime,jdbcType=TIMESTAMP},
+        productid = #{productid,jdbcType=INTEGER}
+        where apiid = #{apiid,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKey_apirunresult_0" parameterType="com.yskj.domain.Api">
+        update api
+        set
+        apirunresult = 0,
+        apiactual = #{apiactual,jdbcType=VARCHAR}
+        where apiid = #{apiid,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKey_apirunresult_1" parameterType="com.yskj.domain.Api">
+        update api
+        set
+        apirunresult = 1,
+        apiactual = #{apiactual,jdbcType=VARCHAR}
+        where apiid = #{apiid,jdbcType=INTEGER}
+    </update>
+
+</mapper>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yskj.dao.bugMapper">
+    <resultMap id="BaseResultMap" type="com.yskj.domain.bug">
+        <id column="bugid" jdbcType="INTEGER" property="bugid"/>
+        <result column="functionpoint" jdbcType="VARCHAR" property="functionpoint"/>
+        <result column="TestData" jdbcType="VARCHAR" property="testdata"/>
+        <result column="ExpectResult" jdbcType="VARCHAR" property="expectresult"/>
+        <result column="ActualResult" jdbcType="VARCHAR" property="actualresult"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        bugid, functionpoint, TestData, ExpectResult, ActualResult
+    </sql>
+
+
+    <select id="listByAll" resultMap="BaseResultMap">
+        select * from bug
+    </select>
+
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bug
+        where bugid = #{bugid,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from bug
+        where bugid = #{bugid,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.yskj.domain.bug">
+        insert into bug (functionpoint, TestData,
+        ExpectResult, ActualResult)
+        values (#{functionpoint,jdbcType=VARCHAR}, #{testdata,jdbcType=VARCHAR},
+        #{expectresult,jdbcType=VARCHAR}, #{actualresult,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.yskj.domain.bug">
+        insert into bug
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="functionpoint != null">
+                functionpoint,
+            </if>
+            <if test="testdata != null">
+                TestData,
+            </if>
+            <if test="expectresult != null">
+                ExpectResult,
+            </if>
+            <if test="actualresult != null">
+                ActualResult,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="functionpoint != null">
+                #{functionpoint,jdbcType=VARCHAR},
+            </if>
+            <if test="testdata != null">
+                #{testdata,jdbcType=VARCHAR},
+            </if>
+            <if test="expectresult != null">
+                #{expectresult,jdbcType=VARCHAR},
+            </if>
+            <if test="actualresult != null">
+                #{actualresult,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yskj.domain.bug">
+        update bug
+        <set>
+            <if test="functionpoint != null">
+                functionpoint = #{functionpoint,jdbcType=VARCHAR},
+            </if>
+            <if test="testdata != null">
+                TestData = #{testdata,jdbcType=VARCHAR},
+            </if>
+            <if test="expectresult != null">
+                ExpectResult = #{expectresult,jdbcType=VARCHAR},
+            </if>
+            <if test="actualresult != null">
+                ActualResult = #{actualresult,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where bugid = #{bugid,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yskj.domain.bug">
+        update bug
+        set functionpoint = #{functionpoint,jdbcType=VARCHAR},
+        TestData = #{testdata,jdbcType=VARCHAR},
+        ExpectResult = #{expectresult,jdbcType=VARCHAR},
+        ActualResult = #{actualresult,jdbcType=VARCHAR}
+        where bugid = #{bugid,jdbcType=INTEGER}
+    </update>
+</mapper>

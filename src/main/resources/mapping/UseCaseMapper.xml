@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yskj.dao.UseCaseMapper">
+    <resultMap id="BaseResultMap" type="com.yskj.domain.UseCase">
+        <id column="caseid" jdbcType="INTEGER" property="caseid"/>
+        <result column="casename" jdbcType="VARCHAR" property="casename"/>
+        <result column="casedesc" jdbcType="VARCHAR" property="casedesc"/>
+        <result column="caseactual" jdbcType="VARCHAR" property="caseactual"/>
+        <result column="caseexpect" jdbcType="VARCHAR" property="caseexpect"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        caseid, casename, casedesc, caseactual, caseexpect
+    </sql>
+
+    <select id="listByAll" resultMap="BaseResultMap">
+        select * from usecase
+    </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from usecase
+        where caseid = #{caseid,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from usecase
+        where caseid = #{caseid,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.yskj.domain.UseCase">
+        insert into usecase (casename, casedesc,
+        caseactual, caseexpect)
+        values (#{casename,jdbcType=VARCHAR}, #{casedesc,jdbcType=VARCHAR},
+        #{caseactual,jdbcType=VARCHAR}, #{caseexpect,jdbcType=VARCHAR})
+    </insert>
+
+    <!-- caseid, #{caseid,jdbcType=INTEGER},
+      <if test="caseid != null">
+          caseid,
+        </if>
+            <if test="caseid != null">
+          #{caseid,jdbcType=INTEGER},
+        </if>
+
+    -->
+    <insert id="insertSelective" parameterType="com.yskj.domain.UseCase">
+        insert into usecase
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="casename != null">
+                casename,
+            </if>
+            <if test="casedesc != null">
+                casedesc,
+            </if>
+            <if test="caseactual != null">
+                caseactual,
+            </if>
+            <if test="caseexpect != null">
+                caseexpect,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="casename != null">
+                #{casename,jdbcType=VARCHAR},
+            </if>
+            <if test="casedesc != null">
+                #{casedesc,jdbcType=VARCHAR},
+            </if>
+            <if test="caseactual != null">
+                #{caseactual,jdbcType=VARCHAR},
+            </if>
+            <if test="caseexpect != null">
+                #{caseexpect,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yskj.domain.UseCase">
+        update usecase
+        <set>
+            <if test="casename != null">
+                casename = #{casename,jdbcType=VARCHAR},
+            </if>
+            <if test="casedesc != null">
+                casedesc = #{casedesc,jdbcType=VARCHAR},
+            </if>
+            <if test="caseactual != null">
+                caseactual = #{caseactual,jdbcType=VARCHAR},
+            </if>
+            <if test="caseexpect != null">
+                caseexpect = #{caseexpect,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where caseid = #{caseid,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yskj.domain.UseCase">
+        update usecase
+        set casename = #{casename,jdbcType=VARCHAR},
+        casedesc = #{casedesc,jdbcType=VARCHAR},
+        caseactual = #{caseactual,jdbcType=VARCHAR},
+        caseexpect = #{caseexpect,jdbcType=VARCHAR}
+        where caseid = #{caseid,jdbcType=INTEGER}
+    </update>
+</mapper>

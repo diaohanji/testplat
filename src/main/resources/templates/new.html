@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+
+    <script src="js/jquery-3.3.1.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        //动态添加表格
+        function add() {
+            var top1 = 118;
+            var xhcs = forEachTDCS();
+            if (xhcs != "") {
+                var xhcss = xhcs.split(",");
+                var dqzhzhygtr = xhcss[xhcss.length - 1] * 1 + 1;//当前添加的最后一个tr的id值
+                top1 = top1 + 36 * dqzhzhygtr - 36;//动态添加图片的高
+                //参数 dqzhzhygtr为第几个tr的索引 ,top1为计算的高
+                creatTR(dqzhzhygtr, top1)//创建tr和td的方法
+            }
+        }
+
+        //得到'发明人姓名'和'发明人排名'的tr有几行
+        var forEachTDCS = function () {
+            var xhcs = "";
+            //循环所有的tr
+            $("#table").find("tr").each(function () {
+                var tableTr = $(this).attr("id");//找到tr的id
+                if (tableTr != "undefined" && tableTr != null) {
+                    if (tableTr.indexOf("tableTR_") >= 0) {
+                        if (xhcs == "") {
+                            xhcs += tableTr.split("_")[1];//分割出tr的索引
+                        } else {
+                            xhcs += "," + tableTr.split("_")[1]
+                        }
+                    }
+                }
+            })
+            return xhcs;
+        }
+
+        //创建tr和td
+        function creatTR(dqzhzhygtr, top1) {
+            var strTr = "";
+            var strImg = "";
+            strTr += "<tr id='tableTR_" + dqzhzhygtr + "'><td class='bt2'>发明人" + dqzhzhygtr + "姓名 </td>"
+            strTr += "<td><input type='text' class='bd-ys1' id='InventorName_" + dqzhzhygtr + "' value='' /></td>";
+            strTr += "<td class='bt2' >发明人" + dqzhzhygtr + "排名</td>";
+            strTr += "<td><input type='text' id='InventorRanking_" + dqzhzhygtr + "' class='bd-ys1' value='' /></td></tr>";
+            strImg = "<div id='jianimg_" + dqzhzhygtr + "' style='position: absolute; top: " + top1 + "px; right: -25px;'><img   src='images/ORB_Icons_by_002.png' onclick='jian(" + dqzhzhygtr + "," + top1 + ")'/></div>"
+            //告诉tr在N行减1的位置
+            var dqzhzhygtrs = dqzhzhygtr * 1 - 1;
+            $("#tableTR_" + dqzhzhygtrs).after(strTr)//一定要用after才在N行减1之后的位置顺序插入
+            $("#tableTR_" + dqzhzhygtrs).after(strImg)//追加减号图片
+        }
+
+        //动态减掉td表格
+        function jian(index, top1) {
+            //得到操作的所有tr
+            var xhcs = forEachTDCS();
+            var xhcss = xhcs.split(",");
+            $("#jianimg_" + index).remove();//删除图片的索引
+            $("#tableTR_" + index).remove();//删除tr的索引
+            for (var i = 0; i < xhcss.length; i++) {
+                //所需要的索引需大于要删除的索引
+                if (xhcss[i] > index) {
+                    //获取图片div的高
+                    var jtop = $("#jianimg_" + xhcss[i]).css('top');
+                    //获取的高-所需要的数值
+                    var jtopS = jtop.split("px")[0] * 1 - 36 * 1;
+                    //div的高经计算后设置到div的高中  也就是从新赋值
+                    $("#jianimg_" + xhcss[i]).css({"top": jtopS});
+                    var imgId = "jianimg_" + (xhcss[i] * 1 - 1);
+                    var trId = "tableTR_" + (xhcss[i] * 1 - 1);
+                    var InventorNameid = "InventorName_" + (xhcss[i] * 1 - 1);
+                    var InventorRankingId = "InventorRanking_" + (xhcss[i] * 1 - 1);
+                    //改变tr索引 和 图片div索引 让其排序
+                    $("#jianimg_" + xhcss[i]).attr("id", imgId);//新的排序id赋值到div中
+                    $("#InventorName_" + xhcss[i]).attr("id", InventorNameid);//姓名--将input的id排序  赋值到input的id中
+                    $("#InventorRanking_" + xhcss[i]).attr("id", InventorRankingId);//排名--将input的id排序  赋值到input的id中
+                    var str = "<img style='abvn' src='images/ORB_Icons_by_002.png' onclick='jian(" + (xhcss[i] * 1 - 1) + "," + jtopS + ")'/>";
+                    $("#" + imgId).html(str);//点击onclick方法里的索引才能改变
+                    $("#tableTR_" + xhcss[i]).attr("id", trId);//新的排序id赋值到tr中
+                    $("#" + trId).find("td").eq(0).text("发明人" + (xhcss[i] * 1 - 1) + "姓名");//改变显示名称顺序
+                    $("#" + trId).find("td").eq(2).text("发明人" + (xhcss[i] * 1 - 1) + "排名");//改变显示排名顺序
+                }
+            }
+        }
+
+    </script>
+
+</head>
+
+<body>
+<div style="position: absolute; top: 118px; right: -25px;">
+    <!-- <img src="${pageContext.request.contextPath}/img/jia.png" onclick="add()"/> -->
+    <div style="position: absolute; top: 118px; right: -25px;"><img src="images/ORB_Icons_by_001.png" onclick="add()"/>
+    </div>
+
+</div>
+
+<code class="language-html">
+    <table class="table-ys3" width="100%" id="table">
+        <tr id="tableTR_1">
+            <td class="bt2" width="4%">发明人1姓名</td>
+            <td width="10%"><input type="text" id="InventorName_1" class="bd-ys1" value=""/></td>
+            <td class="bt2" width="4%">发明人1排名</td>
+            <td width="10%"><input type="text" id="InventorRanking_1" class="bd-ys1" value=""/></td>
+        </tr>
+        <table>
+</code>
+</body>
+</html>

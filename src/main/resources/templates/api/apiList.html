@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>userList</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}"></link>
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/jsCalender/WdatePicker.js"></script>
+    <style type="text/css">
+        .mytable {
+            table-layout: fixed;
+            width: 98%
+            border: 0px;
+            margin: 0px;
+        }
+
+        .mytable tr td {
+            text-overflow: ellipsis; /* for IE */
+            -moz-text-overflow: ellipsis; /* for Firefox,mozilla */
+            overflow: hidden;
+            white-space: nowrap;
+            border: 1px solid;
+
+        }
+    </style>
+
+
+</head>
+<body class="container">
+<br/>
+<h1>接口管理</h1>
+<br/><br/>
+
+
+<div class="with:80%">
+    <table class="table table-hover mytable">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>功能点</th>
+            <th>API Host</th>
+            <th>参数键值</th>
+            <th>期望键值</th>
+            <th>实际结果</th>
+            <th>计划</th>
+            <th>结果</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--       <tr  th:each="api : ${api}"> -->
+        <tr th:each="api:${pageInfo.list}">
+            <th scope="row" th:text="${api.apiid}"></th>
+            <td th:text="${api.apifunctionpoint}"></td>
+            <td th:text="${api.apiurl}"></td>
+            <td th:text="${api.apiparam}"></td>
+            <td th:text="${api.apiexpect}"></td>
+            <td th:text="${api.apiactual}"></td>
+            <td th:text="${api.planrun}"></td>
+            <td bgcolor="white" th:if="${api.apirunresult} eq '2'">未执行</td>
+            <td bgcolor="green" th:if="${api.apirunresult} eq '1'">通过</td>
+            <td bgcolor="red" th:if="${api.apirunresult} eq '0'">失败</td>
+
+
+            <td><a th:href="@{/toEditApi(id=${api.apiid})}">编辑</a></td>
+            <td><a th:href="@{/deleteApi(id=${api.apiid})}">删除</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="form-group">
+    <div class="col-sm-2 control-label">
+        <a href="/toAddApi" th:href="@{/toAddApi}" class="btn btn-info">添加</a>
+    </div>
+</div>
+
+<!--<div class="form-group">
+    <div class="col-sm-2 control-label">
+        <a href="/toAdd" th:href="@{/toAdd}" class="btn btn-info">添加</a>
+    </div>
+</div>  -->
+
+
+<!--
+<table>
+<tr>
+<td><a th:href="@{/api/apiList?pageNum=0}">首页</a></td>
+  <td th:switch="${pageNum}">
+    <p th:case="1"> <a th:href="@{/api/apiList?pageNum=1}">上一页</a></p>
+    <p th:case="*"><a th:href="@{/api/apiList(pageNum=${pageNum-1})}">上一页</a></p>
+  </td>
+<td th:switch="${pageNum}">
+     <p th:case="${totalPages}"><a th:href="@{/api/apiList(pageNum=${totalPages})}">下一页</a></p>
+     <p th:case="*"><a th:href="@{/api/apiList(pageNum=${pageNum+1})}">下一页</a></p>
+   </td>
+   <td><a th:href="@{/api/apiList(pageNum=${totalPages})}">尾页</a></td>
+</tr>
+</table>-->
+
+
+<nav>
+    <ul class="pagination">
+        <li>
+            <a th:if="${not isFirstPage}" th:href="@{${'apiList'}(pageNum=${pageNum-1},pageSize=${pageSize})}"
+               aria-label="Previous">
+                <span aria-hidden="true">«</span>
+            </a>
+            <a th:if="${isFirstPage}" href="javascript:void(0);" aria-label="Previous">
+                <span aria-hidden="true">«</span>
+            </a>
+        </li>
+
+        <li th:each="pageNo : ${#numbers.sequence(1, totalPages)}">
+            <a th:if="${pageNum eq pageNo}" href="javascript:void(0);">
+                <span th:text="${pageNo}"></span>
+            </a>
+
+            <a th:if="${not (pageNum eq pageNo)}" th:href="@{${'apiList'}(pageNum=${pageNo},pageSize=${pageSize})}">
+                <span th:text="${pageNo}"></span>
+            </a>
+        </li>
+
+        <li>
+            <a th:if="${not isLastPage}" th:href="@{${'apiList'}(pageNum=${pageNum+1},pageSize=${pageSize})}"
+               aria-label="Next">
+                <span aria-hidden="true">»</span>
+            </a>
+            <a th:if="${isLastPage}" href="javascript:void(0);" aria-label="Next">
+                <span aria-hidden="true">»</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+
+</body>
+</html>
