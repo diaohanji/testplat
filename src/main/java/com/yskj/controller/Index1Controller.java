@@ -41,6 +41,7 @@ public class Index1Controller {
         UseCase user = new UseCase();
         UseCase user2 = new UseCase();
         user.setCaseactual("11111");
+        user.setCaseactual("111111111111");
         user.setCasedesc("22222");
         user.setCaseexpect("33333");
         user.setCaseid(11);
