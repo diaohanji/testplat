@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Index1Controller.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">com.yskj.controller</a> &gt; <span class="el_source">Index1Controller.java</span></div><h1>Index1Controller.java</h1><pre class="source lang-java linenums">package com.yskj.controller;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.yskj.domain.Api;
+import com.yskj.domain.UseCase;
+import com.yskj.domain.bug;
+import com.yskj.service.ApiService;
+
+//
+//
+//import javax.annotation.Resource;
+//
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+//import org.springframework.stereotype.Controller;
+//import org.springframework.web.bind.annotation.RequestMapping;
+//
+//
+@RestController
+@RequestMapping(&quot;/&quot;)
+<span class="fc" id="L38">public class Index1Controller {</span>
+    @RequestMapping(&quot;/testJson&quot;)
+    public Map jsonMap() {
+<span class="nc" id="L41">        UseCase user = new UseCase();</span>
+<span class="nc" id="L42">        UseCase user2 = new UseCase();</span>
+<span class="nc" id="L43">        user.setCaseactual(&quot;11111&quot;);</span>
+<span class="nc" id="L44">        user.setCasedesc(&quot;22222&quot;);</span>
+<span class="nc" id="L45">        user.setCaseexpect(&quot;33333&quot;);</span>
+<span class="nc" id="L46">        user.setCaseid(11);</span>
+<span class="nc" id="L47">        user.setCasename(&quot;343433&quot;);</span>
+<span class="nc" id="L48">        user2.setCaseactual(&quot;hehe&quot;);</span>
+<span class="nc" id="L49">        user2.setCasedesc(&quot;heiheih&quot;);</span>
+<span class="nc" id="L50">        user2.setCaseexpect(&quot;hahah&quot;);</span>
+<span class="nc" id="L51">        user2.setCaseid(12);</span>
+<span class="nc" id="L52">        user2.setCasename(&quot;ajfjd&quot;);</span>
+<span class="nc" id="L53">        List Userlist = new ArrayList();</span>
+<span class="nc" id="L54">        Userlist.add(user);</span>
+<span class="nc" id="L55">        Userlist.add(user2);</span>
+<span class="nc" id="L56">        Map map = new HashMap();</span>
+<span class="nc" id="L57">        Map map2 = new HashMap();</span>
+<span class="nc" id="L58">        map.put(&quot;userList&quot;, Userlist);</span>
+<span class="nc" id="L59">        map.put(&quot;user&quot;, user);</span>
+
+<span class="nc" id="L61">        map2.put(&quot;data&quot;, map);</span>
+<span class="nc" id="L62">        map2.put(&quot;ret&quot;, 0);</span>
+<span class="nc" id="L63">        map2.put(&quot;msg&quot;, &quot;成功&quot;);</span>
+<span class="nc" id="L64">        return map2;</span>
+    }
+
+
+<span class="fc" id="L68">    static Connection conn = null;</span>
+<span class="fc" id="L69">    static List apilist = null;</span>
+<span class="fc" id="L70">    static List buglist = null;</span>
+<span class="fc" id="L71">    static Map map = null;</span>
+
+    //获取连接
+    public static Connection getConnect() {
+<span class="nc" id="L75">        String URL = &quot;jdbc:mysql://127.0.0.1:3306/testplat?useUnicode=true&amp;amp;characterEncoding=utf-8&quot;;</span>
+<span class="nc" id="L76">        String USER = &quot;root&quot;;</span>
+<span class="nc" id="L77">        String PASSWORD = &quot;123456&quot;;</span>
+        //1.加载驱动程序
+        try {
+<span class="nc" id="L80">            Class.forName(&quot;com.mysql.jdbc.Driver&quot;);</span>
+            //2.获得数据库链接
+<span class="nc" id="L82">            conn = DriverManager.getConnection(URL, USER, PASSWORD);</span>
+<span class="nc" id="L83">        } catch (Exception e) {</span>
+            // TODO Auto-generated catch block
+<span class="nc" id="L85">            e.printStackTrace();</span>
+<span class="nc" id="L86">        }</span>
+
+<span class="nc" id="L88">        return conn;</span>
+    }
+
+
+    //查库
+    public static List query() {
+        //3.通过数据库的连接操作数据库，实现增删改查（使用Statement类）
+        Statement st;
+        ResultSet rs;
+<span class="nc" id="L97">        apilist = new ArrayList();</span>
+        try {
+<span class="nc" id="L99">            st = conn.createStatement();</span>
+<span class="nc" id="L100">            rs = st.executeQuery(&quot;select * from api&quot;);</span>
+            //4.处理数据库的返回结果(使用ResultSet类)
+<span class="nc bnc" id="L102" title="All 2 branches missed.">            while (rs.next()) {</span>
+//				             System.out.println(rs.getString(&quot;apiid&quot;)+&quot; &quot;
+//				                           +rs.getString(&quot;apiurl&quot;));
+
+<span class="nc" id="L106">                Api api = new Api();</span>
+<span class="nc" id="L107">                api.setApiurl(rs.getString(&quot;apiurl&quot;));</span>
+<span class="nc" id="L108">                api.setApiid(rs.getInt(&quot;apiid&quot;));</span>
+
+<span class="nc" id="L110">                apilist.add(api);</span>
+<span class="nc" id="L111">            }</span>
+
+
+            //关闭资源
+<span class="nc" id="L115">            rs.close();</span>
+<span class="nc" id="L116">            st.close();</span>
+<span class="nc" id="L117">            conn.close();</span>
+<span class="nc" id="L118">        } catch (Exception e) {</span>
+            // TODO Auto-generated catch block
+<span class="nc" id="L120">            e.printStackTrace();</span>
+<span class="nc" id="L121">        }</span>
+<span class="nc" id="L122">        return apilist;</span>
+    }
+
+    //查库
+    public static List query2() {
+        //3.通过数据库的连接操作数据库，实现增删改查（使用Statement类）
+        Statement st;
+        ResultSet rs;
+<span class="nc" id="L130">        buglist = new ArrayList();</span>
+        try {
+<span class="nc" id="L132">            st = conn.createStatement();</span>
+<span class="nc" id="L133">            rs = st.executeQuery(&quot;select * from bug limit 5&quot;);</span>
+            //4.处理数据库的返回结果(使用ResultSet类)
+<span class="nc bnc" id="L135" title="All 2 branches missed.">            while (rs.next()) {</span>
+<span class="nc" id="L136">                bug bug = new bug();</span>
+
+<span class="nc" id="L138">                bug.setTestdata(rs.getString(&quot;TestData&quot;));</span>
+
+<span class="nc" id="L140">                String[] arr = {&quot;111&quot;, &quot;222222&quot;, &quot;333333&quot;};</span>
+
+<span class="nc" id="L142">                bug.setArr(arr);</span>
+
+
+<span class="nc" id="L145">                buglist.add(bug);</span>
+<span class="nc" id="L146">            }</span>
+
+
+            //关闭资源
+<span class="nc" id="L150">            rs.close();</span>
+<span class="nc" id="L151">            st.close();</span>
+<span class="nc" id="L152">            conn.close();</span>
+<span class="nc" id="L153">        } catch (Exception e) {</span>
+            // TODO Auto-generated catch block
+<span class="nc" id="L155">            e.printStackTrace();</span>
+<span class="nc" id="L156">        }</span>
+<span class="nc" id="L157">        return buglist;</span>
+
+    }
+
+
+    //查库
+    public static List queryCaseList() {
+        //3.通过数据库的连接操作数据库，实现增删改查（使用Statement类）
+        Statement st;
+        ResultSet rs;
+<span class="nc" id="L167">        buglist = new ArrayList();</span>
+        try {
+<span class="nc" id="L169">            st = conn.createStatement();</span>
+<span class="nc" id="L170">            rs = st.executeQuery(&quot;select * from usecase&quot;);</span>
+            //4.处理数据库的返回结果(使用ResultSet类)
+<span class="nc bnc" id="L172" title="All 2 branches missed.">            while (rs.next()) {</span>
+<span class="nc" id="L173">                bug bug = new bug();</span>
+
+<span class="nc" id="L175">                bug.setTestdata(rs.getString(&quot;TestData&quot;));</span>
+
+<span class="nc" id="L177">                String[] arr = {&quot;111&quot;, &quot;222222&quot;, &quot;333333&quot;};</span>
+
+<span class="nc" id="L179">                bug.setArr(arr);</span>
+
+
+<span class="nc" id="L182">                buglist.add(bug);</span>
+<span class="nc" id="L183">            }</span>
+
+
+            //关闭资源
+<span class="nc" id="L187">            rs.close();</span>
+<span class="nc" id="L188">            st.close();</span>
+<span class="nc" id="L189">            conn.close();</span>
+<span class="nc" id="L190">        } catch (Exception e) {</span>
+            // TODO Auto-generated catch block
+<span class="nc" id="L192">            e.printStackTrace();</span>
+<span class="nc" id="L193">        }</span>
+<span class="nc" id="L194">        return buglist;</span>
+
+    }
+
+
+    @RequestMapping(&quot;/testJson2&quot;)
+    public Map jsonMap2() {
+<span class="nc" id="L201">        System.out.println(111);</span>
+<span class="nc" id="L202">        getConnect();</span>
+
+<span class="nc" id="L204">        apilist = query();</span>
+<span class="nc" id="L205">        getConnect();</span>
+<span class="nc" id="L206">        buglist = query2();</span>
+
+<span class="nc" id="L208">        HashMap map = new HashMap();</span>
+<span class="nc" id="L209">        HashMap map2 = new HashMap();</span>
+
+<span class="nc" id="L211">        map.put(&quot;apilist&quot;, apilist);</span>
+<span class="nc" id="L212">        map.put(&quot;buglist&quot;, buglist);</span>
+
+
+<span class="nc" id="L215">        map2.put(&quot;msg&quot;, &quot;成功&quot;);</span>
+<span class="nc" id="L216">        map2.put(&quot;code&quot;, 200);</span>
+<span class="nc" id="L217">        map2.put(&quot;data&quot;, map);</span>
+
+
+<span class="nc" id="L220">        System.out.println(map);</span>
+<span class="nc" id="L221">        return map2;</span>
+    }
+
+
+//    @Resource
+//    @Autowired
+//    ApiService apiService;
+//	@RequestMapping(&quot;/jsonList1&quot;)
+//	public List jsonList(String str) {
+//		
+////		List&lt;Api&gt; apiList=apiService.listByAll();
+////		return apiList;
+//		
+//	}
+//	
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

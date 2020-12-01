@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RestApiController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">com.yskj.controller</a> &gt; <span class="el_source">RestApiController.java</span></div><h1>RestApiController.java</h1><pre class="source lang-java linenums">package com.yskj.controller;
+
+import com.yskj.util.ResponseDataUtil;
+import com.yskj.util.ResultEnums;
+import org.junit.jupiter.api.Test;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
+
+import com.github.pagehelper.PageInfo;
+import com.yskj.util.ResponseData;
+import com.yskj.domain.Api;
+import com.yskj.domain.UseCase;
+import com.yskj.service.ApiService;
+
+@RestController
+@RequestMapping(&quot;/&quot;)
+@CrossOrigin
+<span class="fc" id="L27">public class RestApiController {</span>
+    @Resource
+    @Autowired
+    ApiService apiService;
+
+    @RequestMapping(&quot;/resttestJson&quot;)
+    public Map jsonMap() {
+<span class="fc" id="L34">        UseCase user = new UseCase();</span>
+<span class="fc" id="L35">        UseCase user2 = new UseCase();</span>
+<span class="fc" id="L36">        user.setCaseactual(&quot;11111&quot;);</span>
+<span class="fc" id="L37">        user.setCasedesc(&quot;22222&quot;);</span>
+<span class="fc" id="L38">        user.setCaseexpect(&quot;33333&quot;);</span>
+<span class="fc" id="L39">        user.setCaseid(11);</span>
+<span class="fc" id="L40">        user.setCasename(&quot;343433&quot;);</span>
+<span class="fc" id="L41">        user2.setCaseactual(&quot;hehe&quot;);</span>
+<span class="fc" id="L42">        user2.setCasedesc(&quot;heiheih&quot;);</span>
+<span class="fc" id="L43">        user2.setCaseexpect(&quot;hahah&quot;);</span>
+<span class="fc" id="L44">        user2.setCaseid(12);</span>
+<span class="fc" id="L45">        user2.setCasename(&quot;ajfjd&quot;);</span>
+<span class="fc" id="L46">        List Userlist = new ArrayList();</span>
+<span class="fc" id="L47">        Userlist.add(user);</span>
+<span class="fc" id="L48">        Userlist.add(user2);</span>
+<span class="fc" id="L49">        Map map = new HashMap();</span>
+<span class="fc" id="L50">        Map map2 = new HashMap();</span>
+<span class="fc" id="L51">        map.put(&quot;userList&quot;, Userlist);</span>
+<span class="fc" id="L52">        map.put(&quot;user&quot;, user);</span>
+<span class="fc" id="L53">        map2.put(&quot;data&quot;, map);</span>
+<span class="fc" id="L54">        map2.put(&quot;ret&quot;, 0);</span>
+<span class="fc" id="L55">        map2.put(&quot;msg&quot;, &quot;成功&quot;);</span>
+<span class="fc" id="L56">        return map2;</span>
+    }
+    /**
+     * 根据页码和大小分页查询
+     * @param page 当前页，默认为1
+     * @param size 当前每页显示行数，默认为5
+     * @return 页信息的实体
+     */
+    @CrossOrigin(origins = &quot;*&quot;)
+    @RequestMapping(value = {&quot;/restapiList&quot;}, method = RequestMethod.GET)
+    public List getList(Api api) {
+<span class="nc" id="L67">        List&lt;Api&gt; list = apiService.listByAll();</span>
+<span class="nc" id="L68">        return list;</span>
+    }
+
+
+    /**
+     * 测试jacoco用
+     */
+    @CrossOrigin(origins = &quot;*&quot;)
+    @RequestMapping(value = {&quot;/restapiList1&quot;}, method = RequestMethod.GET)
+    public String testMethod1(Api api) {
+<span class="nc" id="L78">        return &quot;helloworld&quot;;</span>
+    }
+    @CrossOrigin(origins = &quot;*&quot;)
+    @RequestMapping(value = {&quot;/restapiList2&quot;}, method = RequestMethod.GET)
+    public int addMethod(int a, int b) {
+<span class="nc" id="L83">        return a+b;</span>
+    }
+
+    @CrossOrigin(origins = &quot;*&quot;)
+    @RequestMapping(value = {&quot;/testPageHelper1&quot;}, method = RequestMethod.GET)
+    public ResponseData&lt;Api&gt; testPageHelper1(@RequestParam(required=false,defaultValue=&quot;1&quot;) Integer pageNum, @RequestParam(required=false,defaultValue=&quot;6&quot;) Integer pageSize, @RequestParam(required=false,defaultValue=&quot;1&quot;) Integer productid){
+        try {
+<span class="nc" id="L90">            PageInfo&lt;Api&gt; queryResult = apiService.findAllUserByPageS(pageNum,pageSize,productid);</span>
+<span class="nc" id="L91">            return ResponseDataUtil.buildSuccess(queryResult);</span>
+<span class="nc" id="L92">        }catch(Exception e) {</span>
+<span class="nc" id="L93">            e.printStackTrace();</span>
+<span class="nc" id="L94">            return ResponseDataUtil.buildError(ResultEnums.ERROR.toString(),&quot;请求失败&quot;);</span>
+        }
+//        return queryResult;
+    }
+//    @CrossOrigin(origins = &quot;*&quot;)
+//    @RequestMapping(value = {&quot;/testPageHelper2&quot;}, method = RequestMethod.GET)
+//    public List&lt;Api&gt; testPageHelper2(@RequestParam(required=false,defaultValue=&quot;1&quot;) Integer pageNum,@RequestParam(required=false,defaultValue=&quot;6&quot;) Integer pageSize){
+//        List&lt;Api&gt; queryResult = apiService.findAllUserByPageF(pageNum,pageSize);
+//        return queryResult;
+//    }
+
+    @RequestMapping(value = {&quot;/deleteapibyid/{apiid}&quot;},method = RequestMethod.DELETE)
+    public String delete(@PathVariable(&quot;apiid&quot;) String ids) {
+<span class="nc" id="L107">        String[] idss = ids.split(&quot;,&quot;);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        for (String id : idss) {</span>
+<span class="nc" id="L109">            int idint = Integer.parseInt(id);</span>
+<span class="nc" id="L110">            apiService.delete(idint);</span>
+        }
+
+<span class="nc" id="L113">        return &quot;0&quot;;</span>
+    }
+
+    @CrossOrigin(origins = &quot;*&quot;)
+    @RequestMapping(value= &quot;/addApi&quot;,method = RequestMethod.POST)
+    public String add(@RequestBody Api api) {
+<span class="nc" id="L119">        apiService.add(api);</span>
+<span class="nc" id="L120">        return &quot;redirect:/testPageHelper1&quot;;</span>
+    }
+
+    @CrossOrigin(origins = &quot;*&quot;)
+    @RequestMapping(value = &quot;/toEditApi&quot;,method = RequestMethod.PATCH)
+    @ResponseBody
+    public String toEdit(@RequestBody int apiid,Model model) {
+<span class="nc" id="L127">        System.out.println(apiid);</span>
+<span class="nc" id="L128">        Api api=apiService.getById(apiid);</span>
+<span class="nc" id="L129">        model.addAttribute(&quot;api&quot;, api);</span>
+<span class="nc" id="L130">        return &quot;api/apiEdit&quot;;</span>
+    }
+
+    @CrossOrigin(origins = &quot;*&quot;)
+    @RequestMapping(value = &quot;/editApi&quot;,method = RequestMethod.PATCH)
+    @ResponseBody
+    public String edit(@RequestBody Api api) {
+<span class="nc" id="L137">        apiService.edit(api);</span>
+<span class="nc" id="L138">        return &quot;redirect:/apiList&quot;;</span>
+    }
+
+    @Test
+    public void test(){
+//        List list = new ArrayList();
+//        list.add(&quot;1&quot;);
+<span class="nc" id="L145">        Class&lt;Api&gt; apiClass = Api.class;</span>
+<span class="nc" id="L146">        Class&lt;? extends Class&gt; aClass = apiClass.getClass();</span>
+
+
+<span class="nc" id="L149">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

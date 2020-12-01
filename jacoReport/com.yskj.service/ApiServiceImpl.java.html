@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApiServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">com.yskj.service</a> &gt; <span class="el_source">ApiServiceImpl.java</span></div><h1>ApiServiceImpl.java</h1><pre class="source lang-java linenums">package com.yskj.service;
+
+import java.util.List;
+
+import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.yskj.dao.ApiMapper;
+import com.yskj.domain.Api;
+
+@Service
+<span class="fc" id="L15">public class ApiServiceImpl implements ApiService {</span>
+
+    @Autowired
+    private ApiMapper apiMapper;
+
+    @Override
+    public void add(Api api) {
+<span class="nc" id="L22">        System.out.println(&quot;888888888888888888&quot;);</span>
+<span class="nc" id="L23">        apiMapper.insert(api);</span>
+<span class="nc" id="L24">    }</span>
+
+    @Override
+    public void edit(Api Api) {
+//	    	   int caseid =Api.getCaseid();
+//	           String caseid1 = String.valueOf(caseid);
+//	           if(caseid1 == null){//新建
+////	               id=counter.incrementAndGet();
+//	        	   Api.setCaseid(caseid);
+//	        	   apiMapper.insert(Api);
+//	           }
+<span class="nc" id="L35">        apiMapper.updateByPrimaryKey(Api);</span>
+<span class="nc" id="L36">    }</span>
+
+    @Override
+    public void delete(int id) {
+<span class="nc" id="L40">        apiMapper.deleteByPrimaryKey(id);</span>
+<span class="nc" id="L41">    }</span>
+
+    @Override
+    public Api getById(int id) {
+<span class="nc" id="L45">        return apiMapper.selectByPrimaryKey(id);</span>
+    }
+
+    @Override
+    public List&lt;Api&gt; listByAll() {
+
+<span class="nc" id="L51">        List&lt;Api&gt; list = apiMapper.listByAll();</span>
+<span class="nc" id="L52">        return list;</span>
+    }
+
+
+    @Override
+    public List&lt;Api&gt; queryUserInfo(int productid) {
+
+<span class="nc" id="L59">        return apiMapper.queryUserInfo(productid);</span>
+    }
+
+//    @Override
+//    public List&lt;Api&gt; findAllUserByPageF(int pageNum, int pageSize) {
+//        // TODO Auto-generated method stub
+//        PageHelper.startPage(pageNum, pageSize);
+//        List&lt;Api&gt; lists = apiMapper.queryUserInfo();
+//        return lists;
+//    }
+
+    @Override
+    public PageInfo&lt;Api&gt; findAllUserByPageS(int pageNum, int pageSize,int productid) {
+        // TODO Auto-generated method stub
+<span class="nc" id="L73">        PageHelper.startPage(pageNum, pageSize);</span>
+
+        // 自定义的mapper文件
+
+<span class="nc" id="L77">        List&lt;Api&gt; lists = apiMapper.queryUserInfo(productid);</span>
+<span class="nc" id="L78">        PageInfo&lt;Api&gt; pageInfo = new PageInfo&lt;Api&gt;(lists);</span>
+<span class="nc" id="L79">        return pageInfo;</span>
+
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

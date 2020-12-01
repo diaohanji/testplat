@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MybatisConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">com.yskj.config</a> &gt; <span class="el_source">MybatisConfig.java</span></div><h1>MybatisConfig.java</h1><pre class="source lang-java linenums">package com.yskj.config;
+
+import com.github.pagehelper.PageHelper;
+import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.TransactionManagementConfigurer;
+
+import java.util.Properties;
+
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+
+@Configuration
+@EnableTransactionManagement
+<span class="fc" id="L24">public class MybatisConfig implements TransactionManagementConfigurer {</span>
+    @Resource(name = &quot;dataSource&quot;)
+    DataSource dataSource;
+
+    /**
+     * 可以通过这个类,详细配置mybatis
+     *
+     * @return
+     */
+    @Bean
+    public org.apache.ibatis.session.Configuration mybatisSetting() {
+<span class="fc" id="L35">        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();</span>
+<span class="fc" id="L36">        return configuration;</span>
+    }
+
+    @Bean(name = &quot;sqlSessionFactory&quot;)
+    public SqlSessionFactory sqlSessionFactoryBean() {
+
+<span class="fc" id="L42">        SqlSessionFactoryBean bean = new SqlSessionFactoryBean();</span>
+<span class="fc" id="L43">        bean.setDataSource(dataSource);</span>
+<span class="fc" id="L44">        bean.setTypeAliasesPackage(&quot;com.yskj.domain&quot;);</span>
+
+        //分页插件,插件无非是设置mybatis的拦截器
+<span class="fc" id="L47">        PageHelper pageHelper = new PageHelper();</span>
+<span class="fc" id="L48">        Properties properties = new Properties();</span>
+<span class="fc" id="L49">        properties.setProperty(&quot;reasonable&quot;, &quot;true&quot;);</span>
+<span class="fc" id="L50">        properties.setProperty(&quot;supportMethodsArguments&quot;, &quot;true&quot;);</span>
+<span class="fc" id="L51">        properties.setProperty(&quot;returnPageInfo&quot;, &quot;check&quot;);</span>
+<span class="fc" id="L52">        properties.setProperty(&quot;params&quot;, &quot;count=countSql&quot;);</span>
+<span class="fc" id="L53">        pageHelper.setProperties(properties);</span>
+
+        //添加插件 pageHelper版本要对，不然会报错
+<span class="fc" id="L56">        bean.setPlugins(new Interceptor[]{pageHelper});</span>
+
+        //添加XML目录
+<span class="fc" id="L59">        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();</span>
+        try {
+<span class="fc" id="L61">            bean.setMapperLocations(resolver.getResources(&quot;classpath:mapping/*.xml&quot;));</span>
+<span class="fc" id="L62">            return bean.getObject();</span>
+<span class="nc" id="L63">        } catch (Exception e) {</span>
+<span class="nc" id="L64">            throw new RuntimeException(&quot;sqlSessionFactory init fail&quot;, e);</span>
+        }
+    }
+
+    /**
+     * 用于实际查询的sql工具,传统dao开发形式可以使用这个,基于mapper代理则不需要注入
+     *
+     * @param sqlSessionFactory
+     * @return
+     */
+    @Bean(name = &quot;sqlSessionTemplate&quot;)
+    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
+<span class="fc" id="L76">        return new SqlSessionTemplate(sqlSessionFactory);</span>
+    }
+
+    /**
+     * 事务管理,具体使用在service层加入@Transactional注解
+     */
+    @Bean(name = &quot;transactionManager&quot;)
+    @Override
+    public PlatformTransactionManager annotationDrivenTransactionManager() {
+<span class="fc" id="L85">        return new DataSourceTransactionManager(dataSource);</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
